@@ -1,0 +1,36 @@
+{
+  "name": "daylite",
+  "description": "lightweight fast datepicker for mobile web apps",
+  "version": "0.1.0",
+  "homepage": "https://github.com/gstroup/daylite",
+  "author": {
+    "name": "Greg Stroup",
+    "email": "gstroup@gmail"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gstroup/daylite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gstroup/daylite/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/gstroup/daylite/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "lib/daylite",
+  "engines": {
+    "node": "~0.6.15"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.3.8",
+    "amdefine": ">=0.0.2"
+  },
+  "keywords": []
+}

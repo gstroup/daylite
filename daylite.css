@@ -1,0 +1,86 @@
+.hide { display: none; }
+.show { display: block; }
+.dl-day { 
+  width: 14%;
+  height: 12%;
+  float: left;
+  text-align: center;
+  border: 1px solid black;
+  margin: 0px -1px -1px 0px;
+  /* padding-top: 3%; */`
+  font-size: 1.2em;
+  
+  /* http://gradients.glrzad.com/ */
+  background-image: linear-gradient(bottom, rgb(88,227,220) 9%, rgb(110,177,179) 61%);
+  background-image: -o-linear-gradient(bottom, rgb(88,227,220) 9%, rgb(110,177,179) 61%);
+  background-image: -moz-linear-gradient(bottom, rgb(88,227,220) 9%, rgb(110,177,179) 61%);
+  background-image: -webkit-linear-gradient(bottom, rgb(88,227,220) 9%, rgb(110,177,179) 61%);
+  background-image: -ms-linear-gradient(bottom, rgb(88,227,220) 9%, rgb(110,177,179) 61%);
+  background-image: -webkit-gradient(
+  	linear,
+  	left bottom,
+  	left top,
+  	color-stop(0.09, rgb(88,227,220)),
+  	color-stop(0.61, rgb(110,177,179))
+  );
+}
+.dl-day-special { /* hideous pink */
+  /*-webkit-box-shadow: 0px 0px 30px white;*/
+  
+  background-image: linear-gradient(bottom, rgb(246,43,93) 84%, rgb(255,69,121) 72%);
+  background-image: -o-linear-gradient(bottom, rgb(246,43,93) 84%, rgb(255,69,121) 72%);
+  background-image: -moz-linear-gradient(bottom, rgb(246,43,93) 84%, rgb(255,69,121) 72%);
+  background-image: -webkit-linear-gradient(bottom, rgb(246,43,93) 84%, rgb(255,69,121) 72%);
+  background-image: -ms-linear-gradient(bottom, rgb(246,43,93) 84%, rgb(255,69,121) 72%);
+
+  background-image: -webkit-gradient(
+  	linear,
+  	left bottom,
+  	left top,
+  	color-stop(0.84, rgb(246,43,93)),
+  	color-stop(0.72, rgb(255,69,121))
+  );
+}
+
+.dl-day-disabled {
+  background-image: linear-gradient(bottom, rgb(69,69,69) 28%, rgb(120,120,120) 64%, rgb(179,179,179) 82%);
+  background-image: -o-linear-gradient(bottom, rgb(69,69,69) 28%, rgb(120,120,120) 64%, rgb(179,179,179) 82%);
+  background-image: -moz-linear-gradient(bottom, rgb(69,69,69) 28%, rgb(120,120,120) 64%, rgb(179,179,179) 82%);
+  background-image: -webkit-linear-gradient(bottom, rgb(69,69,69) 28%, rgb(120,120,120) 64%, rgb(179,179,179) 82%);
+  background-image: -ms-linear-gradient(bottom, rgb(69,69,69) 28%, rgb(120,120,120) 64%, rgb(179,179,179) 82%);
+
+  background-image: -webkit-gradient(
+  	linear,
+  	left bottom,
+  	left top,
+  	color-stop(0.28, rgb(69,69,69)),
+  	color-stop(0.64, rgb(120,120,120)),
+  	color-stop(0.82, rgb(179,179,179))
+  );
+}
+
+.dl-week {
+  width: 100%;
+  float: left;
+}
+
+.dl-head {
+  height: 12%;
+  font-size: 1.5em;
+}
+.dl-prev {
+  width: 10%;
+  float: left;
+}
+.dl-next {
+  width: 10%;
+  float: left;
+}
+.dl-month-name {
+  text-align: center;
+  float: left;
+  width: 80%;
+}
+.dl-grid {
+  width: 100%;
+}

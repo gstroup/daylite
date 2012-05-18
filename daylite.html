@@ -1,0 +1,35 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1"/>
+  <script type="text/javascript" src="lib/require.js"></script>
+  <script>
+    require(["lib/moment", "js/daylite", "demo"]);
+  </script>
+  <link rel="stylesheet" type="text/css" href="daylite.css">
+  <title>Daylite Demo</title>
+</head>
+
+<body style="font-family: Helvetica, Arial, sans-serif;">
+  Please fill out this form.
+  <form>
+    
+    <div>
+      Name:
+      <input type="text">
+    </div>
+    <div>
+      Date:
+      <input type="text" id="dateField" value="5/2/2012">
+    </div>
+    <div class="dl-container" id="picker" style="display: none;">
+      picker goes here.
+    </div>
+    
+  </form>
+
+</body>
+
+<!--
+<script type="text/javascript" src="demo.js"></script>
+-->
+</html>
