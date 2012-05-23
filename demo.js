@@ -10,12 +10,13 @@ define(["js/daylite"], function(daylite) {
     {
       container: "picker",
       dateFormat: "MM/DD/YYYY",
-      specialDate: "05/28/2012",
+      specialDate: new Date(2012, 4, 28), //"05/28/2012",
       disableWeekends: true,
       disableDates: [], 
-      minDate: new Date(Date.parse("Tue 01 May 2012 00:00:00 EST-0500")), 
-      maxDate: new Date (Date.parse("Mon 31 Dec 2012 00:00:00 EST-0500")),
-			swipeEnabled: false,
+      minDate: new Date(2012, 4, 8),
+      maxDate: new Date(2012, 7, 15),
+      swipeEnabled: false,
+      language: "en",
       onSelection: function() {
         // do something
       }

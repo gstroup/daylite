@@ -42,7 +42,7 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', 'lint test');
+  grunt.registerTask('default', 'lint');
 
   // A convenient task alias.
   grunt.registerTask('uitest', 'server casper');

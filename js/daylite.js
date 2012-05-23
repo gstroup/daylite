@@ -1,7 +1,3 @@
-// if (typeof define !== 'function') {
-//     var define = require('amdefine')(module);
-// }
-
 define(["moment"], function(moment) {
 
 //var daylite = function() {
@@ -13,19 +9,39 @@ define(["moment"], function(moment) {
     var o;
     settings = {
       dateFormat: "MM/DD/YYYY",
-      disableWeekends: false
+      disableWeekends: false,
+      disableDates: null, 
+      specialDate: null, 
+      minDate: null, 
+      maxDate: null,
+			swipeEnabled: false,
+      language: "en"
     };
     for (o in options) {
       if (options.hasOwnProperty(o)) {
         settings[o] = options[o];
       }
     }
-
+    settings.specialDate = settings.specialDate ? moment(settings.specialDate) : null;
+    settings.minDate = settings.minDate ? moment(settings.minDate) : null;
+    settings.maxDate = settings.maxDate ? moment(settings.maxDate) : null;
+    moment.lang(settings.language);
     container = document.getElementById(settings.container);
   }
   
   //// Handlers
   function incrementMonth(monthsToAdd) {
+    if (settings.minDate && monthsToAdd < 0) {
+      if (settings.minDate.diff( dateInCurrentMonth.clone().date(1) ) > 0) {
+        return false;
+      }
+    } 
+    if (settings.maxDate && monthsToAdd > 0) {
+      if (settings.maxDate.diff( dateInCurrentMonth.clone().add("M", monthsToAdd).date(1) ) < 0) {
+        return false;
+      }
+    }
+    
     dateInCurrentMonth.add("M", monthsToAdd);
     //console.log("dateInCurrentMonth: " + dateInCurrentMonth);
     updateGrid(dateInCurrentMonth);
@@ -42,8 +58,8 @@ define(["moment"], function(moment) {
   }
   
   function addHandlers() {
-    document.getElementById('dl-prev').addEventListener("click", function () { incrementMonth(-1); }, false);
-    document.getElementById('dl-next').addEventListener("click", function () { incrementMonth(1); }, false);
+    container.getElementsByClassName('dl-prev')[0].addEventListener("click", function () { incrementMonth(-1); }, false);
+    container.getElementsByClassName('dl-next')[0].addEventListener("click", function () { incrementMonth(1); }, false);
     container.getElementsByClassName('dl-grid')[0].addEventListener("click", function (e) { onDateSelected(e);}, false);
   }
   
@@ -52,10 +68,14 @@ define(["moment"], function(moment) {
     var dayOfMonth = date.date();
     if (settings.disableWeekends && (date.day() === 0 || date.day() === 6)) {
       return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";      
-    } else if (date.format(settings.dateFormat) === settings.specialDate) {
-      return "<div class='dl-day dl-day-special'>" + dayOfMonth + "</div>";
     } else if (date.month() !== dateInCurrentMonth.month()) {
       return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";
+    } else if (settings.minDate && date.diff(settings.minDate, 'days') < 0) {
+      return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";      
+    } else if (settings.maxDate && date.diff(settings.maxDate, 'days') > 0) {
+      return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";            
+    } else if (settings.specialDate && date.diff(settings.specialDate) === 0) {
+      return "<div class='dl-day dl-day-special'>" + dayOfMonth + "</div>";
     }
     return "<div class='dl-day'>" + dayOfMonth + "</div>";
     //return "<div class='day'><a href='" + dayOfMonth + "'>" + dayOfMonth + "</a></div>";
@@ -73,9 +93,9 @@ define(["moment"], function(moment) {
   
   function displayHeader(anyDate, htmlDays) {
     // TODO: use images for prev, next, add close
-    htmlDays.push("<div class='dl-head'><div class='dl-prev' id='dl-prev'><<</div>");
+    htmlDays.push("<div class='dl-head'><div class='dl-prev'><<</div>");
     htmlDays.push("<div class='dl-month-name'>" + anyDate.format("MMMM YYYY") + "</div>");
-    htmlDays.push("<div class='dl-next' id='dl-next'>>></div></div>");
+    htmlDays.push("<div class='dl-next'>>></div></div>");
   }
   
   function updateGrid(fieldValue) {
