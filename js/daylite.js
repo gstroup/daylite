@@ -51,7 +51,7 @@ define(["moment"], function(moment) {
     if (e.target.className.indexOf("dl-day-disabled")>0) {
       return false;
     }
-    // TODO: trim?? use an attribute instead of innerHTML
+    // TODO: trim?? use an attribute instead of innerHTML?
     var dayOfMonth = e.target.innerHTML;
     document.getElementById(formFieldId).value = dateInCurrentMonth.date(dayOfMonth).format(settings.dateFormat);
     container.style.display = "none";    
@@ -108,7 +108,6 @@ define(["moment"], function(moment) {
     dateInCurrentMonth = dateInCurrentMonth || selectedDate;
     daysInMonth = selectedDate.daysInMonth();
     
-    container.innerHTML = '';
     displayHeader(selectedDate, htmlDays);
     htmlDays.push("<div class='dl-grid'>");
     
@@ -150,7 +149,7 @@ define(["moment"], function(moment) {
     
     htmlDays.push("</div>");
 
-    container.innerHTML += htmlDays.join(" ");
+    container.innerHTML = htmlDays.join(" ");
       //_.template("<div><%=(x)%></div>", "data");
       
     addHandlers();
