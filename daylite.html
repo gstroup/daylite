@@ -6,6 +6,7 @@
     require(["lib/moment/moment", "lib/moment/lang/fr", "js/daylite", "demo"]);
   </script>
   <link rel="stylesheet" type="text/css" href="daylite.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
   <title>Daylite Demo</title>
 </head>
 
@@ -21,10 +22,15 @@
       Date:
       <input type="text" id="dateField" value="5/2/2012">
     </div>
-    <div class="dl-container" id="picker" style="display: none;">
+    <div id="picker" style="display: none;">
       picker goes here.
     </div>
-    
+    <div>
+      Another Date:
+      <input type="text" id="secondDateField">
+    </div>
+    <div id="secondPicker" style="display: none;">
+    </div>    
   </form>
 
 </body>

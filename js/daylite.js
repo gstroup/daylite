@@ -15,7 +15,8 @@ define(["moment"], function(moment) {
       minDate: null, 
       maxDate: null,
 			swipeEnabled: false,
-      language: "en"
+      language: "en",
+      useTwitterBootstrap: true
     };
     for (o in options) {
       if (options.hasOwnProperty(o)) {
@@ -48,13 +49,19 @@ define(["moment"], function(moment) {
   }
   
   function onDateSelected(e) {
+    var momentSelected, dayOfMonth;
     if (e.target.className.indexOf("dl-day-disabled")>0) {
       return false;
     }
-    // TODO: trim?? use an attribute instead of innerHTML?
-    var dayOfMonth = e.target.innerHTML;
-    document.getElementById(formFieldId).value = dateInCurrentMonth.date(dayOfMonth).format(settings.dateFormat);
-    container.style.display = "none";    
+    // TODO: trim?? use an attribute instead of innerHTML?  this.replace(/^\s+|\s+$/g, "");
+    dayOfMonth = e.target.innerHTML;
+    momentSelected = dateInCurrentMonth.date(dayOfMonth);
+    if (settings.dateSelectedHandler) {
+      settings.dateSelectedHandler(momentSelected.toDate());
+    } else {
+      document.getElementById(formFieldId).value = momentSelected.format(settings.dateFormat);
+      container.style.display = "none"; 
+    }
   }
   
   function addHandlers() {
@@ -93,9 +100,17 @@ define(["moment"], function(moment) {
   
   function displayHeader(anyDate, htmlDays) {
     // TODO: use images for prev, next, add close
-    htmlDays.push("<div class='dl-head'><div class='dl-prev'><<</div>");
+    if (settings.useTwitterBootstrap) {
+      htmlDays.push("<div class='dl-head'><div class='dl-prev'><i class='icon-chevron-left'></i></div>");      
+    } else {
+      htmlDays.push("<div class='dl-head'><div class='dl-prev'><<</div>");      
+    }
     htmlDays.push("<div class='dl-month-name'>" + anyDate.format("MMMM YYYY") + "</div>");
-    htmlDays.push("<div class='dl-next'>>></div></div>");
+    if (settings.useTwitterBootstrap) {
+      htmlDays.push("<div class='dl-next'><i class='icon-chevron-right'></i></div></div>");
+    } else {
+      htmlDays.push("<div class='dl-next'>>></div></div>");      
+    }
   }
   
   function updateGrid(fieldValue) {
@@ -108,6 +123,7 @@ define(["moment"], function(moment) {
     dateInCurrentMonth = dateInCurrentMonth || selectedDate;
     daysInMonth = selectedDate.daysInMonth();
     
+    htmlDays.push("<div class='dl-container'>");
     displayHeader(selectedDate, htmlDays);
     htmlDays.push("<div class='dl-grid'>");
     
@@ -147,7 +163,7 @@ define(["moment"], function(moment) {
          
     }
     
-    htmlDays.push("</div>");
+    htmlDays.push("</div></div>");
 
     container.innerHTML = htmlDays.join(" ");
       //_.template("<div><%=(x)%></div>", "data");

@@ -1,7 +1,7 @@
 var casper = require('casper').create({
     verbose: true,
     faultTolerant: false,
-    onError: function(self, m) {
+    onError: function () {  //(self, m) {
       this.capture('error.png');
       // these lines aren't needed. phantom will log the same msg.
       //console.log("FATAL: " + m);
@@ -18,13 +18,13 @@ casper.test.assertNotVisible = function(selector) {
   casper.test.assertNot(casper.visible(selector), "expected " + selector + " to not be visible");
   // this client side util stuff didn't work for me here...
   //return !__utils__.visible(selector);
-}
+};
 
 casper.waitAndClick = function(selector) {
   this.waitForSelector(selector, function() {
     this.click(selector);
   });  
-}
+};
 
 // doesn't seem to work
 casper.on('timeout', function() {
@@ -81,7 +81,6 @@ casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
   });
   casper.then( function() {
     casper.capture('tmp.png');
-    this.test.assertNotVisible('.dl-grid');
     this.test.assertTextExists('May 2012', 'May is displayed');
     this.test.assertEvalEquals(function() {
       return document.querySelector('#dateField').value;
@@ -95,7 +94,7 @@ function assertNextMonth(displayMonth) {
   });
   casper.then(function() {
     casper.test.assertTextExists(displayMonth, displayMonth + ' is displayed');
-  })  
+  })  ;
 }
 
 casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
