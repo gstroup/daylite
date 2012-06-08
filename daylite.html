@@ -12,23 +12,20 @@
 
 <body style="font-family: Helvetica, Arial, sans-serif;">
   Please fill out this form.
-  <form>
+  <form class="well">
     
-    <div>
-      Name:
-      <input type="text">
-    </div>
-    <div>
-      Date:
-      <input type="text" id="dateField" value="5/2/2012">
-    </div>
+    <label>Name:</label>
+    <input type="text">
+    
+    <label>Date:</label>
+    <input type="text" id="dateField" value="5/2/2012">
     <div id="picker" style="display: none;">
       picker goes here.
     </div>
-    <div>
-      Another Date:
-      <input type="text" id="secondDateField">
-    </div>
+
+    <label>Another Date:</label>
+    <input type="text" id="secondDateField">
+
     <div id="secondPicker" style="display: none;">
     </div>    
   </form>
