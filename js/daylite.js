@@ -29,6 +29,19 @@ define(["moment"], function(moment) {
     return settings;
   }
 
+  function isDisabled (aMoment, disabledDates) {
+    var i,
+        aDate = aMoment.valueOf(),
+        disabledLength = disabledDates ? disabledDates.length : 0;
+    for (i=0; i<disabledLength; i++)
+      {
+        if (aDate === disabledDates[i].valueOf()) {
+          return true;
+        }
+      }
+      return false;
+  }
+
   //// Handlers
   function incrementMonth(monthsToAdd, dateInCurrentMonth, container, settings) {
     if (settings.minDate && monthsToAdd < 0) {
@@ -70,7 +83,7 @@ define(["moment"], function(moment) {
   }
 
   //// Html
-  function buildHtmlForDay(date, htmlDays, dateInCurrentMonth, settings) {
+  function buildHtmlForDay(date, dateInCurrentMonth, settings) {
     var dayOfMonth = date.date();
     if (settings.disableWeekends && (date.day() === 0 || date.day() === 6)) {
       return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";      
@@ -82,6 +95,9 @@ define(["moment"], function(moment) {
       return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";            
     } else if (settings.specialDate && date.diff(settings.specialDate, 'days') === 0) {
       return "<div class='dl-day dl-day-special'>" + dayOfMonth + "</div>";
+    } 
+    else if (isDisabled(date, settings.disableDates)) {
+      return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";            
     }
     return "<div class='dl-day'>" + dayOfMonth + "</div>";
   }
@@ -90,7 +106,7 @@ define(["moment"], function(moment) {
     var i;
     htmlDays.push("<div class='dl-week'>");
     for (i=0; i<datesInWeek.length; i++) {
-      htmlDays.push(buildHtmlForDay(datesInWeek[i], htmlDays, dateInCurrentMonth, settings));
+      htmlDays.push(buildHtmlForDay(datesInWeek[i], dateInCurrentMonth, settings));
     }
     htmlDays.push("</div>");
   }
