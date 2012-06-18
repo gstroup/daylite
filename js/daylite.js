@@ -49,7 +49,7 @@ define(["moment"], function(moment) {
     }
 
     //// Handlers
-    function incrementMonth(monthsToAdd, dateInCurrentMonth, container) {
+    function incrementMonth(monthsToAdd, dateInCurrentMonth) {
       if (settings.minDate && monthsToAdd < 0) {
         if (settings.minDate.diff( dateInCurrentMonth.clone().date(1) ) > 0) {
           return false;
@@ -63,10 +63,10 @@ define(["moment"], function(moment) {
   
       dateInCurrentMonth.add("M", monthsToAdd);
       //console.log("dateInCurrentMonth: " + dateInCurrentMonth);
-      updateGrid(dateInCurrentMonth, container, settings);
+      updateGrid(dateInCurrentMonth);
     }
 
-    function onDateSelected(e, container, dateInCurrentMonth, settings) {
+    function onDateSelected(e, dateInCurrentMonth) {
       var momentSelected, dayOfMonth;
       if (e.target.className.indexOf("dl-day-disabled")>0) {
         return false;
@@ -80,17 +80,17 @@ define(["moment"], function(moment) {
         document.getElementById(settings.formFieldId).value = momentSelected.format(settings.dateFormat);
         container.style.display = "none"; 
       }
-      return momentSelected;
+      selectedDate = momentSelected;
     }
 
-    function addHandlers(container, dateInCurrentMonth, settings) {
-      container.getElementsByClassName('dl-prev')[0].addEventListener("click", function () { incrementMonth(-1, dateInCurrentMonth, container); }, false);
-      container.getElementsByClassName('dl-next')[0].addEventListener("click", function () { incrementMonth(1, dateInCurrentMonth, container); }, false);
-      container.getElementsByClassName('dl-grid')[0].addEventListener("click", function (e) { onDateSelected(e, container, dateInCurrentMonth, settings);}, false);
+    function addHandlers(dateInCurrentMonth) {
+      container.getElementsByClassName('dl-prev')[0].addEventListener("click", function () { incrementMonth(-1, dateInCurrentMonth); }, false);
+      container.getElementsByClassName('dl-next')[0].addEventListener("click", function () { incrementMonth(1, dateInCurrentMonth); }, false);
+      container.getElementsByClassName('dl-grid')[0].addEventListener("click", function (e) { onDateSelected(e, dateInCurrentMonth);}, false);
     }
 
     //// Html
-    function buildHtmlForDay(date, dateInCurrentMonth, settings) {
+    function buildHtmlForDay(date, dateInCurrentMonth) {
       // console.log("selectedDate: " + selectedDate.valueOf());
       // console.log("date: " + date.valueOf());
     
@@ -113,16 +113,16 @@ define(["moment"], function(moment) {
       return "<div class='dl-day'>" + dayOfMonth + "</div>";
     }
 
-    function buildHtmlForWeek(datesInWeek, htmlDays, dateInCurrentMonth, settings) {
+    function buildHtmlForWeek(datesInWeek, htmlDays, dateInCurrentMonth) {
       var i;
       htmlDays.push("<div class='dl-week'>");
       for (i=0; i<datesInWeek.length; i++) {
-        htmlDays.push(buildHtmlForDay(datesInWeek[i], dateInCurrentMonth, settings));
+        htmlDays.push(buildHtmlForDay(datesInWeek[i], dateInCurrentMonth));
       }
       htmlDays.push("</div>");
     }
 
-    function displayHeader(anyDate, htmlDays, settings) {
+    function displayHeader(anyDate, htmlDays) {
       if (settings.useTwitterBootstrap) {
         htmlDays.push("<div class='dl-head'><div class='dl-prev'><i class='icon-chevron-left'></i></div>");      
       } else {
@@ -136,29 +136,24 @@ define(["moment"], function(moment) {
       }
     }
 
-    function updateGrid(dateInCurrentMonth, container, settings) {
+    function updateGrid(dateInCurrentMonth) {
       var daysInAWeek = [],
           htmlDays = [],
           prevMonthDays, nextMonthDays,
           i,j,k, dateI,
-          //selectedDate = fieldValue ? moment(fieldValue) : moment(new Date()),
-          daysInMonth; // = selectedDate.daysInMonth();
+          daysInMonth; 
     
       selectedDate = selectedDate || moment(new Date());
       dateInCurrentMonth = dateInCurrentMonth || selectedDate.clone();
-      daysInMonth = selectedDate.daysInMonth();
-      
-      console.log("selectedDate: " + selectedDate);
-      console.log("dateInCurrentMonth: " + dateInCurrentMonth);      
+      daysInMonth = selectedDate.daysInMonth();     
   
       htmlDays.push("<div class='dl-container'>");
-      displayHeader(dateInCurrentMonth, htmlDays, settings);
+      displayHeader(dateInCurrentMonth, htmlDays);
       htmlDays.push("<div class='dl-grid'>");
   
       for (i=1; i<=daysInMonth; i++) {
         // TODO: clean up !!!!!
         //console.log("i=" + i);
-        //dateI = selectedDate.clone().date(i);
         dateI = dateInCurrentMonth.clone().date(i);
     
         // days from prev month
@@ -180,13 +175,13 @@ define(["moment"], function(moment) {
         }
     
         if (dateI.day() === 6) {
-          buildHtmlForWeek(daysInAWeek, htmlDays, dateInCurrentMonth, settings);
+          buildHtmlForWeek(daysInAWeek, htmlDays, dateInCurrentMonth);
           // start a new week row
           daysInAWeek = [];
         }
     
         if (i===daysInMonth) {
-          buildHtmlForWeek(daysInAWeek, htmlDays, dateInCurrentMonth, settings);
+          buildHtmlForWeek(daysInAWeek, htmlDays, dateInCurrentMonth);
         }
        
       }
@@ -196,25 +191,24 @@ define(["moment"], function(moment) {
       container.innerHTML = htmlDays.join(" ");
         //_.template("<div><%=(x)%></div>", "data");
     
-      addHandlers(container, dateInCurrentMonth, settings);
+      addHandlers(dateInCurrentMonth);
     }
 
-//  function Daylite(containerSelector) {
-    // var newDaylite = {},
-    //     container = document.getElementById(containerSelector),
-    //     selectedDateString,
-    //     settings = {};
     newDaylite.init = function(options) {
       settings = init(options);
     };
     newDaylite.open = function(fieldId) {
       var fieldValue = document.getElementById(fieldId).value;
-      selectedDate = fieldValue ? moment(fieldValue) : moment(new Date());
-      updateGrid(null, container, settings);
+      if (fieldValue) {
+        selectedDate = moment(fieldValue);
+      } else if (!selectedDate) {
+        selectedDate = moment(new Date()).sod();
+      }
+      updateGrid(null);
       container.style.display = "block";      
     };
-    newDaylite.onDateSelected = function(e, dateInCurrentMonth, settings) {
-      selectedDate = onDateSelected(e, container, dateInCurrentMonth, settings);
+    newDaylite.onDateSelected = function(e, dateInCurrentMonth) {
+      onDateSelected(e, dateInCurrentMonth);
     };  
     
     return newDaylite;
