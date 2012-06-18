@@ -34,7 +34,7 @@ define(["js/daylite"], function (daylite) {
       disableDates: [new Date(2012, 4, 28), new Date(2012, 6, 4)], 
       minDate: new Date(2012, 3, 8),
       maxDate: new Date(2012, 8, 15),
-      swipeEnabled: false,
+      swipeEnabled: true,
       //language: "fr",
       useTwitterBootstrap: true,
       formFieldId: "secondDateField",

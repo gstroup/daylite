@@ -83,10 +83,48 @@ define(["moment"], function(moment) {
       selectedDate = momentSelected;
     }
 
+    function handleSwipes(dateInCurrentMonth) {
+      var swipe, swipeLeft, startX;
+
+      container.ontouchend = function(e) {
+        console.log("ontouchend");
+        //swipe left
+        if( swipeLeft && swipe ) { 
+          incrementMonth(-1, dateInCurrentMonth);
+          e.stopPropagation();
+        //swipe right
+        } else if(swipe) {
+          incrementMonth(1, dateInCurrentMonth);
+          e.stopPropagation();          
+        }       
+      };
+
+      container.ontouchmove = function(e){
+        console.log("ontouchmove");
+        if( Math.abs(e.touches[0].pageX - startX) > 100 ) { 
+          if( (e.touches[0].pageX - startX) > 5 ) { 
+            swipeLeft = true;
+          } else {
+            swipeLeft = false;
+          }
+          swipe = true;
+        }
+      };
+
+      container.ontouchstart = function(e) {
+        console.log("ontouchstart");
+        startX = e.touches[0].pageX;
+        swipe = false;
+      };
+    }
+
     function addHandlers(dateInCurrentMonth) {
       container.getElementsByClassName('dl-prev')[0].addEventListener("click", function () { incrementMonth(-1, dateInCurrentMonth); }, false);
       container.getElementsByClassName('dl-next')[0].addEventListener("click", function () { incrementMonth(1, dateInCurrentMonth); }, false);
       container.getElementsByClassName('dl-grid')[0].addEventListener("click", function (e) { onDateSelected(e, dateInCurrentMonth);}, false);
+      if (settings.swipeEnabled) {
+        handleSwipes(dateInCurrentMonth);
+      }
     }
 
     //// Html
@@ -207,9 +245,7 @@ define(["moment"], function(moment) {
       updateGrid(null);
       container.style.display = "block";      
     };
-    newDaylite.onDateSelected = function(e, dateInCurrentMonth) {
-      onDateSelected(e, dateInCurrentMonth);
-    };  
+    newDaylite.onDateSelected = onDateSelected;
     
     return newDaylite;
   }
