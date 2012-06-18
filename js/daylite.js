@@ -68,7 +68,9 @@ define(["moment"], function(moment) {
 
     function onDateSelected(e, dateInCurrentMonth) {
       var momentSelected, dayOfMonth;
-      if (e.target.className.indexOf("dl-day-disabled")>0) {
+      // use e.target.classList.contains() ??
+      if (e.target.className.indexOf("dl-day")<0 ||
+          e.target.className.indexOf("dl-day-disabled")>0) {
         return false;
       }
       // TODO: trim?? use a data- attribute instead of innerHTML?  this.replace(/^\s+|\s+$/g, "");
@@ -87,7 +89,6 @@ define(["moment"], function(moment) {
       var swipe, swipeLeft, startX;
 
       container.ontouchend = function(e) {
-        console.log("ontouchend");
         //swipe left
         if( swipeLeft && swipe ) { 
           incrementMonth(-1, dateInCurrentMonth);
@@ -100,7 +101,6 @@ define(["moment"], function(moment) {
       };
 
       container.ontouchmove = function(e){
-        console.log("ontouchmove");
         if( Math.abs(e.touches[0].pageX - startX) > 100 ) { 
           if( (e.touches[0].pageX - startX) > 5 ) { 
             swipeLeft = true;
@@ -112,7 +112,6 @@ define(["moment"], function(moment) {
       };
 
       container.ontouchstart = function(e) {
-        console.log("ontouchstart");
         startX = e.touches[0].pageX;
         swipe = false;
       };
