@@ -68,7 +68,7 @@ casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
 
 casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
   casper.test.comment('test we can not select an invalid date');
-  casper.capture('tmp.png');
+  //casper.capture('tmp.png');
   
   this.waitForSelector('#dateField', function() {
     this.click('#dateField');
@@ -80,7 +80,7 @@ casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
 
   });
   casper.then( function() {
-    casper.capture('tmp.png');
+    //casper.capture('tmp.png');
     this.test.assertTextExists('May 2012', 'May is displayed');
     this.test.assertEvalEquals(function() {
       return document.querySelector('#dateField').value;
@@ -114,6 +114,20 @@ casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
     this.click('.dl-grid .dl-week:nth-child(2) .dl-day:nth-child(3)');
   });    
 });
+
+// TODO: 
+casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
+  casper.test.comment('Make sure selected date is highlighted, only in the right month.');
+  this.waitAndClick("#dateField");
+  casper.then(function() {
+    casper.test.assertTextExists('May 2012', 'May is displayed');
+    // assert may 9 is highlighted
+    // click may 17
+    // open calendar again
+    // assert may 17 is selected
+  });
+});
+//  Make sure calendars don't collide.
 
 casper.run(function() {
   this.test.renderResults(true);
