@@ -4,6 +4,7 @@ define(["moment"], function(moment) {
     var newDaylite = {},
         container = document.getElementById(containerSelector),
         selectedDate,
+        oldMonthHtml, // store in memory, so we don't have to parse the dom
         settings = {};
            
     function init(options) {
@@ -63,7 +64,7 @@ define(["moment"], function(moment) {
   
       dateInCurrentMonth.add("M", monthsToAdd);
       //console.log("dateInCurrentMonth: " + dateInCurrentMonth);
-      updateGrid(dateInCurrentMonth);
+      updateGrid(dateInCurrentMonth, monthsToAdd);
     }
 
     function onDateSelected(e, dateInCurrentMonth) {
@@ -83,6 +84,7 @@ define(["moment"], function(moment) {
         container.style.display = "none"; 
       }
       selectedDate = momentSelected;
+      oldMonthHtml = null;
     }
 
     function handleSwipes(dateInCurrentMonth) {
@@ -118,9 +120,10 @@ define(["moment"], function(moment) {
     }
 
     function addHandlers(dateInCurrentMonth) {
-      container.getElementsByClassName('dl-prev')[0].addEventListener("click", function () { incrementMonth(-1, dateInCurrentMonth); }, false);
-      container.getElementsByClassName('dl-next')[0].addEventListener("click", function () { incrementMonth(1, dateInCurrentMonth); }, false);
-      container.getElementsByClassName('dl-grid')[0].addEventListener("click", function (e) { onDateSelected(e, dateInCurrentMonth);}, false);
+      // TODO: make sure that querySelector is well supported by mobile browsers.
+      container.querySelector('.dl-month .dl-prev').addEventListener("click", function () { incrementMonth(-1, dateInCurrentMonth); }, false);
+      container.querySelector('.dl-month .dl-next').addEventListener("click", function () { incrementMonth(1, dateInCurrentMonth); }, false);
+      container.querySelector('.dl-month .dl-grid').addEventListener("click", function (e) { onDateSelected(e, dateInCurrentMonth);}, false);
       if (settings.swipeEnabled) {
         handleSwipes(dateInCurrentMonth);
       }
@@ -173,23 +176,25 @@ define(["moment"], function(moment) {
       }
     }
 
-    function updateGrid(dateInCurrentMonth) {
+    function updateGrid(dateInCurrentMonth, monthsToAdd) {
       var daysInAWeek = [],
           htmlDays = [],
           prevMonthDays, nextMonthDays,
           i,j,k, dateI,
-          daysInMonth; 
+          daysInMonth, 
+          newMonthHtml,
+          dlContainerStyle; 
     
       selectedDate = selectedDate || moment(new Date());
       dateInCurrentMonth = dateInCurrentMonth || selectedDate.clone();
       daysInMonth = selectedDate.daysInMonth();     
   
-      htmlDays.push("<div class='dl-container'>");
+      htmlDays.push("<div class='dl-month'>");
       displayHeader(dateInCurrentMonth, htmlDays);
       htmlDays.push("<div class='dl-grid'>");
   
       for (i=1; i<=daysInMonth; i++) {
-        // TODO: clean up !!!!!
+        // TODO: clean up
         //console.log("i=" + i);
         dateI = dateInCurrentMonth.clone().date(i);
     
@@ -221,13 +226,39 @@ define(["moment"], function(moment) {
           buildHtmlForWeek(daysInAWeek, htmlDays, dateInCurrentMonth);
         }
        
-      }
-  
-      htmlDays.push("</div></div>");
+      }  
+      htmlDays.push("</div></div>");  // dl-month, dl-grid
+      newMonthHtml = htmlDays.join(" ");
 
+      if (settings.animate) {
+        if (monthsToAdd < 0) {
+          htmlDays.push(oldMonthHtml);
+        } else {
+          htmlDays.unshift(oldMonthHtml);          
+        }
+      } 
+
+      htmlDays.unshift("<div class='dl-container'><div class='dl-months'>");
+      htmlDays.push("</div></div>");
       container.innerHTML = htmlDays.join(" ");
-        //_.template("<div><%=(x)%></div>", "data");
-    
+      oldMonthHtml = newMonthHtml.replace("dl-month", "dl-month-old");
+      
+      if (settings.animate) {
+        setTimeout(function() {
+          
+        
+          dlContainerStyle = container.querySelector('.dl-container').style;
+          // dlContainerStyle.webkitTransitionDuration = dlContainerStyle.MozTransitionDuration = dlContainerStyle.msTransitionDuration = dlContainerStyle.OTransitionDuration = dlContainerStyle.transitionDuration = '1000ms';
+          //dlContainerStyle.setProperty('-webkit-transition', 'all 2000ms linear');  // no workie
+          dlContainerStyle.webkitTransition = "all 500ms ease-out";
+
+          // translate to given index position
+          // style.MozTransform = style.webkitTransform = 'translate3d(' + -(index * this.width) + 'px,0,0)';
+          //         style.msTransform = style.OTransform = 'translateX(' + -(index * this.width) + 'px)';
+          dlContainerStyle.MozTransform = dlContainerStyle.webkitTransform = 'translate(' + -(monthsToAdd * 50) + '%,0)';
+        }, 3);
+      }
+      
       addHandlers(dateInCurrentMonth);
     }
 

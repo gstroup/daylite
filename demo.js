@@ -18,6 +18,7 @@ define(["js/daylite"], function (daylite) {
       minDate: new Date(2012, 4, 8),
       maxDate: new Date(2012, 7, 15),
       swipeEnabled: false,
+      animate: true,
       //language: "en",
       useTwitterBootstrap: true,
       formFieldId: "dateField"
