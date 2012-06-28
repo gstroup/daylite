@@ -124,6 +124,11 @@ define(["moment"], function(moment) {
       container.querySelector('.dl-month .dl-prev').addEventListener("click", function () { incrementMonth(-1, dateInCurrentMonth); }, false);
       container.querySelector('.dl-month .dl-next').addEventListener("click", function () { incrementMonth(1, dateInCurrentMonth); }, false);
       container.querySelector('.dl-month .dl-grid').addEventListener("click", function (e) { onDateSelected(e, dateInCurrentMonth);}, false);
+      // TODO: handle transition for other browsers.
+      container.querySelector('.dl-months').addEventListener("webkitTransitionEnd", function() {
+        //console.log("transition end handler called");
+        container.querySelector('.dl-month-old').style.visibility = "hidden";
+      });
       if (settings.swipeEnabled) {
         handleSwipes(dateInCurrentMonth);
       }
@@ -183,7 +188,7 @@ define(["moment"], function(moment) {
           i,j,k, dateI,
           daysInMonth, 
           newMonthHtml,
-          dlContainerStyle; 
+          dlMonthsStyle; 
     
       selectedDate = selectedDate || moment(new Date());
       dateInCurrentMonth = dateInCurrentMonth || selectedDate.clone();
@@ -241,21 +246,21 @@ define(["moment"], function(moment) {
       htmlDays.unshift("<div class='dl-container'><div class='dl-months'>");
       htmlDays.push("</div></div>");
       container.innerHTML = htmlDays.join(" ");
-      oldMonthHtml = newMonthHtml.replace("dl-month", "dl-month-old");
+      oldMonthHtml = newMonthHtml.replace("dl-month'", "dl-month-old'");
       
       if (settings.animate) {
-        setTimeout(function() {
-          
+        // seems like the mobile browser needs a tick to repaint, before we can do the transition
+        setTimeout(function() {          
         
-          dlContainerStyle = container.querySelector('.dl-container').style;
+          dlMonthsStyle = container.querySelector('.dl-months').style;
           // dlContainerStyle.webkitTransitionDuration = dlContainerStyle.MozTransitionDuration = dlContainerStyle.msTransitionDuration = dlContainerStyle.OTransitionDuration = dlContainerStyle.transitionDuration = '1000ms';
           //dlContainerStyle.setProperty('-webkit-transition', 'all 2000ms linear');  // no workie
-          dlContainerStyle.webkitTransition = "all 500ms ease-out";
+          dlMonthsStyle.webkitTransition = "all 500ms ease-out";
 
           // translate to given index position
           // style.MozTransform = style.webkitTransform = 'translate3d(' + -(index * this.width) + 'px,0,0)';
           //         style.msTransform = style.OTransform = 'translateX(' + -(index * this.width) + 'px)';
-          dlContainerStyle.MozTransform = dlContainerStyle.webkitTransform = 'translate(' + -(monthsToAdd * 50) + '%,0)';
+          dlMonthsStyle.MozTransform = dlMonthsStyle.webkitTransform = 'translate(' + -(monthsToAdd * 48) + '%,0)';
         }, 3);
       }
       
