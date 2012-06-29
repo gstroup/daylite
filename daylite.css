@@ -116,14 +116,20 @@
   border: 1px solid black;
   float: left;
   padding-bottom: 3%;
-  background-color: pink;
   width: 48%;
 }
 .dl-container { 
   width: 100%;
-  left: 0px;
-  overflow: hidden;
+  height: 80%; /* looks like we must set a height. */
+  overflow-x: hidden;
+  position: relative;  
 }
 .dl-months {
   width: 200%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+}
+.dl-left {
+  left: -96%;
 }

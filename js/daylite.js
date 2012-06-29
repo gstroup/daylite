@@ -124,11 +124,14 @@ define(["moment"], function(moment) {
       container.querySelector('.dl-month .dl-prev').addEventListener("click", function () { incrementMonth(-1, dateInCurrentMonth); }, false);
       container.querySelector('.dl-month .dl-next').addEventListener("click", function () { incrementMonth(1, dateInCurrentMonth); }, false);
       container.querySelector('.dl-month .dl-grid').addEventListener("click", function (e) { onDateSelected(e, dateInCurrentMonth);}, false);
-      // TODO: handle transition for other browsers.
-      container.querySelector('.dl-months').addEventListener("webkitTransitionEnd", function() {
-        //console.log("transition end handler called");
-        container.querySelector('.dl-month-old').style.visibility = "hidden";
-      });
+      if (settings.animate) {
+        // TODO: handle transition for other browsers.
+        container.querySelector('.dl-months').addEventListener("webkitTransitionEnd", function() {
+          //console.log("transition end handler called");
+          // hide the old month so we don't see the edge of it hanging around.
+          container.querySelector('.dl-month-old').style.visibility = "hidden";
+        });
+      }
       if (settings.swipeEnabled) {
         handleSwipes(dateInCurrentMonth);
       }
@@ -136,9 +139,6 @@ define(["moment"], function(moment) {
 
     //// Html
     function buildHtmlForDay(date, dateInCurrentMonth) {
-      // console.log("selectedDate: " + selectedDate.valueOf());
-      // console.log("date: " + date.valueOf());
-    
       var dayOfMonth = date.date();
       if (settings.disableWeekends && (date.day() === 0 || date.day() === 6)) {
         return "<div class='dl-day dl-day-disabled'>" + dayOfMonth + "</div>";      
@@ -192,7 +192,7 @@ define(["moment"], function(moment) {
     
       selectedDate = selectedDate || moment(new Date());
       dateInCurrentMonth = dateInCurrentMonth || selectedDate.clone();
-      daysInMonth = selectedDate.daysInMonth();     
+      daysInMonth = dateInCurrentMonth.daysInMonth();     
   
       htmlDays.push("<div class='dl-month'>");
       displayHeader(dateInCurrentMonth, htmlDays);
@@ -238,13 +238,16 @@ define(["moment"], function(moment) {
       if (settings.animate) {
         if (monthsToAdd < 0) {
           htmlDays.push(oldMonthHtml);
+          htmlDays.unshift("<div class='dl-container'><div class='dl-months dl-left'>");          
         } else {
-          htmlDays.unshift(oldMonthHtml);          
+          htmlDays.unshift(oldMonthHtml);      
+          htmlDays.unshift("<div class='dl-container'><div class='dl-months'>");              
         }
-      } 
+      } else {
+        htmlDays.unshift("<div class='dl-container'><div class='dl-months'>");
+      }
+      htmlDays.push("</div></div>");        
 
-      htmlDays.unshift("<div class='dl-container'><div class='dl-months'>");
-      htmlDays.push("</div></div>");
       container.innerHTML = htmlDays.join(" ");
       oldMonthHtml = newMonthHtml.replace("dl-month'", "dl-month-old'");
       
@@ -254,8 +257,7 @@ define(["moment"], function(moment) {
         
           dlMonthsStyle = container.querySelector('.dl-months').style;
           // dlContainerStyle.webkitTransitionDuration = dlContainerStyle.MozTransitionDuration = dlContainerStyle.msTransitionDuration = dlContainerStyle.OTransitionDuration = dlContainerStyle.transitionDuration = '1000ms';
-          //dlContainerStyle.setProperty('-webkit-transition', 'all 2000ms linear');  // no workie
-          dlMonthsStyle.webkitTransition = "all 500ms ease-out";
+          dlMonthsStyle.webkitTransition = dlMonthsStyle.MozTransitionDuration = "all 400ms ease-in";
 
           // translate to given index position
           // style.MozTransform = style.webkitTransform = 'translate3d(' + -(index * this.width) + 'px,0,0)';
