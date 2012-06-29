@@ -21,12 +21,25 @@
     <input type="text" id="dateField" value="5/9/2012" readonly="readonly">
     <div id="picker" style="display: none;">
     </div>
-
+    
+    <span class="help-block">This example includes support for swiping from month to month, and slide animation.</span>
     <label>Another Date:</label>
     <!-- TODO: add a new style here... so users don't have to set the readonly property.  
-      maybe it will show an icon too -->
-    <input type="text" id="secondDateField" readonly="readonly">
-
+      maybe it will show an icon too 
+      
+    <div class="controls">
+    <div class="input-append">
+      <input type="text" id="secondDateField" readonly="readonly">
+      <span class="add-on">
+        <i class="icon-calendar"></i>
+      <span>
+    </div>
+    </div>
+    -->
+    <a class="btn" href="#" id="secondDateField">
+      <i class="icon-calendar"></i> Pick a date
+    </a>
+    
     <div id="secondPicker" style="display: none;">
     </div>    
   </form>
