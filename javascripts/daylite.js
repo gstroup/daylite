@@ -1,4 +1,4 @@
-define(["./lib/moment/moment"], function(moment) {
+define(["require", "./lib/moment/moment"], function(require) {
 
   function Daylite(containerSelector) {
     var newDaylite = {},
