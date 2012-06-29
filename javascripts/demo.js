@@ -1,4 +1,4 @@
-define(["js/daylite"], function (daylite) {
+define(["daylite"], function (daylite) {
 
   //var daylite = require("js/daylite");
   //document.onReadyStateChange = function () {
