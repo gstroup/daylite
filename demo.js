@@ -18,7 +18,7 @@ define(["js/daylite"], function (daylite) {
       minDate: new Date(2012, 4, 8),
       maxDate: new Date(2012, 7, 15),
       swipeEnabled: false,
-      animate: true,
+      animate: false,
       //language: "en",
       useTwitterBootstrap: true,
       formFieldId: "dateField"
@@ -36,6 +36,7 @@ define(["js/daylite"], function (daylite) {
       minDate: new Date(2012, 3, 8),
       maxDate: new Date(2012, 8, 15),
       swipeEnabled: true,
+      animate: true,
       //language: "fr",
       useTwitterBootstrap: true,
       formFieldId: "secondDateField",

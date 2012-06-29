@@ -84,7 +84,7 @@ casper.thenOpen('http://localhost:8000/daylite.html').then( function() {
     this.test.assertTextExists('May 2012', 'May is displayed');
     this.test.assertEvalEquals(function() {
       return document.querySelector('#dateField').value;
-    }, "5/2/2012", "date in original field does not change");
+    }, "5/9/2012", "date in original field does not change");
   });
 });
 
