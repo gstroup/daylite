@@ -1,0 +1,36 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1"/>
+  <script type="text/javascript" src="javascripts/lib/require.js"></script>
+  <script>
+    require(["javascripts/lib/moment/moment", "javascripts/lib/moment/lang/fr", "javascripts/js/daylite", "javascripts/demo"]);
+  </script>
+  <link rel="stylesheet" type="text/css" href="stylesheets/daylite.css">
+  <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css">
+  <title>Daylite Demo</title>
+</head>
+
+<body style="font-family: Helvetica, Arial, sans-serif;">
+  Please fill out this form.
+  <form class="well">
+    
+    <label>Name:</label>
+    <input type="text">
+    
+    <label>Date:</label>
+    <input type="text" id="dateField" value="5/9/2012" readonly="readonly">
+    <div id="picker" style="display: none;">
+    </div>
+
+    <label>Another Date:</label>
+    <!-- TODO: add a new style here... so users don't have to set the readonly property.  
+      maybe it will show an icon too -->
+    <input type="text" id="secondDateField" readonly="readonly">
+
+    <div id="secondPicker" style="display: none;">
+    </div>    
+  </form>
+
+</body>
+
+</html>
