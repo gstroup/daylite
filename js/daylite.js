@@ -181,59 +181,70 @@ define(["moment"], function(moment) {
       }
     }
 
-    function updateGrid(dateInCurrentMonth, monthsToAdd) {
-      var daysInAWeek = [],
-          htmlDays = [],
-          prevMonthDays, nextMonthDays,
+    function buildMonth(dateInCurrentMonth) {
+      var prevMonthDays, nextMonthDays,
           i,j,k, dateI,
-          daysInMonth, 
+          daysInMonth,
+          daysInAWeek = [],
+          monthHtml = [];
+
+          selectedDate = selectedDate || moment(new Date());
+          dateInCurrentMonth = dateInCurrentMonth || selectedDate.clone();
+          daysInMonth = dateInCurrentMonth.daysInMonth();     
+
+          monthHtml.push("<div class='dl-month'>");
+          displayHeader(dateInCurrentMonth, monthHtml);
+          monthHtml.push("<div class='dl-grid'>");
+
+          for (i=1; i<=daysInMonth; i++) {
+            // TODO: clean up
+            //console.log("i=" + i);
+            dateI = dateInCurrentMonth.clone().date(i);
+
+            // days from prev month
+            if (dateI.date()===1 && dateI.day() > 0) {
+              prevMonthDays = dateI.day();
+              for (j=prevMonthDays; j>0; j--) {
+                daysInAWeek.push(dateI.clone().subtract('days', j));
+              }
+            } 
+
+            daysInAWeek.push(dateI);
+
+            // days from next month
+            if (i===daysInMonth && dateI.day() < 6) {
+              nextMonthDays = 6 - dateI.day();
+              for (k=1; k<=nextMonthDays; k++) {
+                daysInAWeek.push(dateI.clone().add('days', k));
+              }
+            }
+
+            if (dateI.day() === 6) {
+              buildHtmlForWeek(daysInAWeek, monthHtml, dateInCurrentMonth);
+              // start a new week row
+              daysInAWeek = [];
+            }
+
+            if (i===daysInMonth) {
+              buildHtmlForWeek(daysInAWeek, monthHtml, dateInCurrentMonth);
+            }
+
+          }  
+          monthHtml.push("</div></div>");  // dl-month, dl-grid
+          
+          return monthHtml;
+    }
+
+    function updateGrid(dateInCurrentMonth, monthsToAdd) {
+      var htmlDays = [],
           newMonthHtml,
           dlMonthsStyle; 
     
       selectedDate = selectedDate || moment(new Date());
       dateInCurrentMonth = dateInCurrentMonth || selectedDate.clone();
-      daysInMonth = dateInCurrentMonth.daysInMonth();     
-  
-      htmlDays.push("<div class='dl-month'>");
-      displayHeader(dateInCurrentMonth, htmlDays);
-      htmlDays.push("<div class='dl-grid'>");
-  
-      for (i=1; i<=daysInMonth; i++) {
-        // TODO: clean up
-        //console.log("i=" + i);
-        dateI = dateInCurrentMonth.clone().date(i);
-    
-        // days from prev month
-        if (dateI.date()===1 && dateI.day() > 0) {
-          prevMonthDays = dateI.day();
-          for (j=prevMonthDays; j>0; j--) {
-            daysInAWeek.push(dateI.clone().subtract('days', j));
-          }
-        } 
-    
-        daysInAWeek.push(dateI);
-    
-        // days from next month
-        if (i===daysInMonth && dateI.day() < 6) {
-          nextMonthDays = 6 - dateI.day();
-          for (k=1; k<=nextMonthDays; k++) {
-            daysInAWeek.push(dateI.clone().add('days', k));
-          }
-        }
-    
-        if (dateI.day() === 6) {
-          buildHtmlForWeek(daysInAWeek, htmlDays, dateInCurrentMonth);
-          // start a new week row
-          daysInAWeek = [];
-        }
-    
-        if (i===daysInMonth) {
-          buildHtmlForWeek(daysInAWeek, htmlDays, dateInCurrentMonth);
-        }
-       
-      }  
-      htmlDays.push("</div></div>");  // dl-month, dl-grid
-      newMonthHtml = htmlDays.join(" ");
+      
+      htmlDays = buildMonth(dateInCurrentMonth);
+      newMonthHtml = htmlDays.join("\n");      
 
       if (settings.animate) {
         if (monthsToAdd < 0) {
@@ -257,7 +268,7 @@ define(["moment"], function(moment) {
         
           dlMonthsStyle = container.querySelector('.dl-months').style;
           // dlContainerStyle.webkitTransitionDuration = dlContainerStyle.MozTransitionDuration = dlContainerStyle.msTransitionDuration = dlContainerStyle.OTransitionDuration = dlContainerStyle.transitionDuration = '1000ms';
-          dlMonthsStyle.webkitTransition = dlMonthsStyle.MozTransitionDuration = "all 400ms ease-in";
+          dlMonthsStyle.webkitTransition = dlMonthsStyle.MozTransitionDuration = "all 300ms ease-out";
 
           // translate to given index position
           // style.MozTransform = style.webkitTransform = 'translate3d(' + -(index * this.width) + 'px,0,0)';
