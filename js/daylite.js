@@ -88,7 +88,7 @@ define(["moment"], function(moment) {
     }
 
     function handleSwipes(dateInCurrentMonth) {
-      var swipe, swipeLeft, startX;
+      var swipe, swipeLeft, startX, startY, deltaX;
 
       container.ontouchend = function(e) {
         //swipe left
@@ -103,7 +103,12 @@ define(["moment"], function(moment) {
       };
 
       container.ontouchmove = function(e){
-        if( Math.abs(e.touches[0].pageX - startX) > 100 ) { 
+        deltaX = Math.abs(e.touches[0].pageX - startX);
+        if ( deltaX > Math.abs(e.touches[0].pageY - startY) ) {
+          // this prevents vertical scrolling, when user wants to swipe.
+          e.preventDefault(); 
+        }
+        if( deltaX > 100 ) { 
           if( (e.touches[0].pageX - startX) > 5 ) { 
             swipeLeft = true;
           } else {
@@ -115,6 +120,7 @@ define(["moment"], function(moment) {
 
       container.ontouchstart = function(e) {
         startX = e.touches[0].pageX;
+        startY = e.touches[0].pageY;
         swipe = false;
       };
     }
